@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+/**
+ * ============================================================
+ * InkVerse Design Tokens
+ * ============================================================
+ *
+ * These CSS custom properties define our entire color palette
+ * and fonts in ONE place. Every component will reference these
+ * names (e.g. bg-ink-black) instead of hardcoded hex values -
+ * so if we ever want to adjust the theme, we change it here once.
+ */
+
+:root {
+  /* Core palette - matches the dark, editorial style from our design reference */
+  --color-ink-black: #0a0a0a;      /* main background */
+  --color-ink-surface: #141414;    /* slightly lighter panels/cards */
+  --color-ink-border: #262626;     /* subtle borders on dark backgrounds */
+  --color-ink-cream: #f2efe9;      /* off-white text, headlines */
+  --color-ink-muted: #9c9a93;      /* secondary/muted text */
+  --color-ink-crimson: #8b2c2c;    /* primary accent - active nav, buttons */
+  --color-ink-crimson-bright: #b23b3b; /* hover state for crimson elements */
+  --color-ink-cyan: #4dd9d9;       /* small decorative accents (the diamond) */
+}
+
+@theme inline {
+  --color-ink-black: var(--color-ink-black);
+  --color-ink-surface: var(--color-ink-surface);
+  --color-ink-border: var(--color-ink-border);
+  --color-ink-cream: var(--color-ink-cream);
+  --color-ink-muted: var(--color-ink-muted);
+  --color-ink-crimson: var(--color-ink-crimson);
+  --color-ink-crimson-bright: var(--color-ink-crimson-bright);
+  --color-ink-cyan: var(--color-ink-cyan);
+
+  /* Font families - wired up in layout.tsx via next/font/google */
+  --font-display: var(--font-archivo-black);
+  --font-body: var(--font-inter);
+  --font-tagline: var(--font-playfair);
+}
+
+body {
+  background: var(--color-ink-black);
+  color: var(--color-ink-cream);
+  font-family: var(--font-body);
+}
+
+/**
+ * Marquee animation: slides the duplicated text strip exactly
+ * 50% to the left. Because the strip contains TWO copies of the
+ * text side by side, sliding by 50% moves exactly one full copy
+ * out of view - at which point the second copy is in the exact
+ * position the first one started, creating a seamless loop.
+ */
+@keyframes marquee {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 18s linear infinite;
+}
+
+/**
+ * Animated gradient text: cycles the background-position of a
+ * linear-gradient across purple -> blue -> pink -> purple. Combined
+ * with background-clip: text, only the gradient inside the text
+ * shape is visible - giving a shifting color effect on the word.
+ */
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.text-gradient-shift {
+  background: linear-gradient(90deg, #b66dff, #4dd9d9, #ff6db6, #b66dff);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-shift 6s ease-in-out infinite;
+}
+
+/* Soft glow behind crimson/cream headline text, matching the
+   reference design's neon-lit look on a dark background. */
+.text-glow-crimson {
+  text-shadow: 0 0 24px rgba(178, 59, 59, 0.55);
+}
+
+.text-glow-cream {
+  text-shadow: 0 0 20px rgba(242, 239, 233, 0.25);
+}
+
+/* Outlined "wireframe" text style - stroke only, transparent fill */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-ink-muted);
+}
+
+/* Subtle dark teal radial mesh behind hero sections, instead of
+   flat black - adds depth without needing an image asset. */
+.bg-mesh {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(15, 90, 80, 0.35), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 30%, rgba(77, 217, 217, 0.08), transparent);
+}
+
+/* Pulsing dot for the "REC" recording indicator - mimics a real
+   camera/recording light blinking softly. */
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(178, 59, 59, 0.6);
+  }
+  50% {
+    opacity: 0.4;
+    box-shadow: 0 0 0 4px rgba(178, 59, 59, 0);
+  }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+
+/* Gentle fade-and-rise entrance animation, applied to hero content
+   on first page load so nothing just "snaps" into view. */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.7s ease-out both;
+}
+
+
+
+
