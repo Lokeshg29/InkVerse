@@ -96,7 +96,7 @@ const tattoosData = [
   {
     title: 'Crimson Dragon',
     description: 'A fierce dragon coiled in bold red and black ink.',
-    imageUrl: 'https://images.unsplash.com/photo-1611501275019-9c5c0ce8a6f8?w=500',
+    imageUrl: '/tattoos/crimson-dragon.jpg',
     style: 'Traditional',
     price: 180,
     artistIndex: 4,
@@ -105,7 +105,7 @@ const tattoosData = [
   {
     title: 'Lunar Koi',
     description: 'A koi fish swimming beneath a crescent moon.',
-    imageUrl: 'https://images.unsplash.com/photo-1565058379802-bbe93b2f703a?w=500',
+    imageUrl: '/tattoos/lunar-koi.jpg',
     style: 'Japanese',
     price: 220,
     artistIndex: 4,
@@ -114,7 +114,7 @@ const tattoosData = [
   {
     title: 'Iron Chrysanthemum',
     description: 'A high-contrast chrysanthemum bloom in heavy blackwork.',
-    imageUrl: 'https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?w=500',
+    imageUrl: '/tattoos/iron-chrysanthemum.jpg',
     style: 'Blackwork',
     price: 200,
     artistIndex: 0,
@@ -123,7 +123,7 @@ const tattoosData = [
   {
     title: 'Wandering Wolf',
     description: 'A lone wolf rendered in delicate fine-line style.',
-    imageUrl: 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=500',
+    imageUrl: '/tattoos/wandering-wolf.jpg',
     style: 'Minimalist',
     price: 140,
     artistIndex: 5,
@@ -132,7 +132,7 @@ const tattoosData = [
   {
     title: 'Voidwalker',
     description: 'An abstract tribal pattern inspired by celestial voids.',
-    imageUrl: 'https://images.unsplash.com/photo-1561948955-570b270e7c36?w=500',
+    imageUrl: '/tattoos/voidwalker.jpg',
     style: 'Tribal',
     price: 160,
     artistIndex: 1,
@@ -141,7 +141,7 @@ const tattoosData = [
   {
     title: 'Geometric Lion',
     description: "A lion's face built entirely from clean geometric shapes.",
-    imageUrl: 'https://images.unsplash.com/photo-1551491931-43c5a87d23b1?w=500',
+    imageUrl: '/tattoos/geometric-lion.jpg',
     style: 'Geometric',
     price: 190,
     artistIndex: 1,
@@ -150,7 +150,7 @@ const tattoosData = [
   {
     title: 'Whispering Forest',
     description: 'A dense forest scene done in bold blackwork linework.',
-    imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=500',
+    imageUrl: '/tattoos/whispering-forest.jpg',
     style: 'Blackwork',
     price: 210,
     artistIndex: 2,
@@ -159,7 +159,7 @@ const tattoosData = [
   {
     title: 'Cosmic Whale',
     description: 'A whale swimming through a starfield, softly shaded.',
-    imageUrl: 'https://images.unsplash.com/photo-1568430462989-44163eb1752f?w=500',
+    imageUrl: '/tattoos/cosmic-whale.jpg',
     style: 'Watercolor',
     price: 230,
     artistIndex: 3,
@@ -168,7 +168,7 @@ const tattoosData = [
   {
     title: 'Sakura Spirit',
     description: 'Cherry blossoms cascading down in soft pastel watercolor.',
-    imageUrl: 'https://images.unsplash.com/photo-1522383225653-ed111181a951?w=500',
+    imageUrl: '/tattoos/sakura-spirit.jpg',
     style: 'Watercolor',
     price: 175,
     artistIndex: 3,
@@ -177,7 +177,7 @@ const tattoosData = [
   {
     title: 'Black Sun',
     description: 'A minimalist sun motif in heavy blackwork.',
-    imageUrl: 'https://images.unsplash.com/photo-1601225998544-12f4dd4cb6b7?w=500',
+    imageUrl: '/tattoos/black-sun.jpg',
     style: 'Minimalist',
     price: 120,
     artistIndex: 5,
@@ -186,7 +186,7 @@ const tattoosData = [
   {
     title: 'Neon Phoenix',
     description: 'A phoenix in high-contrast realism, rising from flame.',
-    imageUrl: 'https://images.unsplash.com/photo-1583500178690-f7fd8f0aa1e1?w=500',
+    imageUrl: '/tattoos/neon-phoenix.jpg',
     style: 'Realism',
     price: 260,
     artistIndex: 3,
@@ -195,7 +195,7 @@ const tattoosData = [
   {
     title: 'Ouroboros',
     description: 'A serpent eating its own tail, classic blackwork style.',
-    imageUrl: 'https://images.unsplash.com/photo-1542556398-95fb5b9c6164?w=500',
+    imageUrl: '/tattoos/ouroboros.jpg',
     style: 'Blackwork',
     price: 195,
     artistIndex: 2,

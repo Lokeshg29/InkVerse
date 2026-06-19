@@ -12,18 +12,15 @@
  * state: the search text, the selected filter, and the current
  * page number all live here and change as the user interacts.
  *
- * DATA SOURCE: mockTattoos (src/lib/mockData.ts) for now.
- * In Phase 6, we'll replace this with a real fetch() to our
- * Express API's GET /api/tattoos endpoint - the rest of this
- * page's logic (filtering, search, pagination) stays the same.
+ * DATA SOURCE: GET /api/tattoos backed by the Express API.
  */
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "@/components/ui/SearchBar";
 import FilterPills from "@/components/ui/FilterPills";
 import TattooCard from "@/components/ui/TattooCard";
-import { mockTattoos } from "@/lib/mockData";
-import { TATTOO_STYLES } from "@/lib/types";
+import { getTattoos, TattoosResponse, TattooApiItem } from "@/lib/api";
+import { TATTOO_STYLES, Tattoo } from "@/lib/types";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -31,34 +28,52 @@ export default function GalleryPage() {
   const [searchText, setSearchText] = useState("");
   const [selectedStyle, setSelectedStyle] = useState<string>("All");
   const [currentPage, setCurrentPage] = useState(1);
+  const [tattoos, setTattoos] = useState<Tattoo[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // useMemo recalculates this filtered list ONLY when searchText,
-  // selectedStyle, or the underlying data changes - not on every
-  // render. For a small mock array this barely matters, but it's
-  // the correct pattern for when this becomes real, larger API data.
-  const filteredTattoos = useMemo(() => {
-    return mockTattoos.filter((tattoo) => {
-      const matchesStyle =
-        selectedStyle === "All" || tattoo.style === selectedStyle;
-      const matchesSearch = tattoo.title
-        .toLowerCase()
-        .includes(searchText.toLowerCase());
-      return matchesStyle && matchesSearch;
-    });
-  }, [searchText, selectedStyle]);
+  useEffect(() => {
+    async function fetchTattoos() {
+      setIsLoading(true);
+      setError(null);
 
-  const totalPages = Math.ceil(filteredTattoos.length / ITEMS_PER_PAGE);
+      try {
+        const response: TattoosResponse = await getTattoos({
+          style: selectedStyle,
+          search: searchText,
+          page: currentPage,
+          limit: ITEMS_PER_PAGE,
+        });
 
-  // Slice out just the tattoos for the CURRENT page.
-  // e.g. page 1 -> items 0-7, page 2 -> items 8-15, etc.
-  const paginatedTattoos = filteredTattoos.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+        const normalizedTattoos: Tattoo[] = response.data.map(
+          (tattoo: TattooApiItem) => ({
+            ...tattoo,
+            id: tattoo._id ?? tattoo.id,
+          })
+        );
 
-  // Whenever the search text or filter changes, jump back to page 1.
-  // Without this, you could be on page 3 of "All", switch to a
-  // filter with only 1 page of results, and see an empty grid.
+        setTattoos(normalizedTattoos);
+        setTotalPages(response.totalPages);
+        setTotalResults(response.total);
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Unable to load tattoos. Please try again."
+        );
+        setTattoos([]);
+        setTotalPages(1);
+        setTotalResults(0);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchTattoos();
+  }, [searchText, selectedStyle, currentPage]);
+
   function handleFilterChange(newStyle: string) {
     setSelectedStyle(newStyle);
     setCurrentPage(1);
@@ -101,14 +116,20 @@ export default function GalleryPage() {
 
       {/* Results count */}
       <p className="mt-8 text-sm text-ink-muted">
-        {filteredTattoos.length} design
-        {filteredTattoos.length !== 1 ? "s" : ""} found
+        {totalResults} design{totalResults !== 1 ? "s" : ""} found
       </p>
 
-      {/* Tattoo grid */}
-      {paginatedTattoos.length > 0 ? (
+      {error ? (
+        <div className="mt-8 rounded-lg border border-ink-border bg-ink-surface p-6 text-center text-sm text-ink-crimson-bright">
+          {error}
+        </div>
+      ) : null}
+
+      {isLoading ? (
+        <div className="mt-16 text-center text-ink-muted">Loading designs…</div>
+      ) : tattoos.length > 0 ? (
         <div className="mt-4 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
-          {paginatedTattoos.map((tattoo) => (
+          {tattoos.map((tattoo) => (
             <TattooCard key={tattoo.id} tattoo={tattoo} />
           ))}
         </div>
