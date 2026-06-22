@@ -17,14 +17,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 // Defining our nav links as data, not hardcoded JSX, means adding
 // a new page later is just adding one line to this array.
 const NAV_LINKS = [
   { label: "Gallery", href: "/gallery" },
+  { label: "Favorites", href: "/favorites" },
   { label: "Artists", href: "/artists" },
   { label: "AI Match", href: "/ai-match" },
-  { label: "Book", href: "/book" },
 ];
 
 export default function Navbar() {
@@ -35,6 +36,11 @@ export default function Navbar() {
 
   // State for the mobile hamburger menu - starts closed.
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const { user } = useAuth();
+  const navLinks = user
+    ? [...NAV_LINKS, { label: "Bookings", href: "/bookings" }]
+    : NAV_LINKS;
 
   return (
     <header className="sticky top-0 z-50 border-b border-ink-border bg-ink-black/95 backdrop-blur-sm">
@@ -72,7 +78,7 @@ export default function Navbar() {
 
         {/* Desktop nav links - hidden on small screens */}
         <ul className="hidden items-center gap-2 md:flex">
-          {NAV_LINKS.map((link) => {
+          {navLinks.map((link) => {
             const isActive = pathname === link.href;
             return (
               <li key={link.href}>
@@ -92,21 +98,7 @@ export default function Navbar() {
         </ul>
 
         {/* Right side: favorites icon + auth button */}
-        <div className="hidden items-center gap-4 md:flex">
-          <Link
-            href="/favorites"
-            aria-label="View favorites"
-            className="text-ink-muted transition-colors hover:text-ink-cream"
-          >
-            <HeartIcon />
-          </Link>
-          <Link
-            href="/login"
-            className="rounded-md border border-ink-cream/20 px-4 py-2 text-xs font-semibold tracking-wide text-ink-cream transition-colors hover:bg-ink-cream hover:text-ink-black"
-          >
-            BOOK / SIGN IN
-          </Link>
-        </div>
+        <AuthButtons />
 
         {/* Mobile hamburger button - only visible on small screens */}
         <button
@@ -122,7 +114,7 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div className="border-t border-ink-border px-6 py-4 md:hidden">
           <ul className="flex flex-col gap-3">
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
@@ -134,18 +126,43 @@ export default function Navbar() {
               </li>
             ))}
             <li>
-              <Link
-                href="/login"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="mt-2 block rounded-md border border-ink-cream/20 px-4 py-2 text-center text-xs font-semibold tracking-wide"
-              >
-                BOOK / SIGN IN
-              </Link>
+              <AuthMobileLinks onClose={() => setIsMobileMenuOpen(false)} />
             </li>
           </ul>
         </div>
       )}
     </header>
+  );
+}
+
+function AuthButtons() {
+  const { user, logout } = useAuth();
+
+  if (user) {
+    return (
+      <div className="hidden items-center gap-4 md:flex">
+        <Link href="/favorites" aria-label="View favorites" className="text-ink-muted transition-colors hover:text-ink-cream">
+          <HeartIcon />
+        </Link>
+        <Link href="/dashboard" className="text-ink-muted hover:text-ink-cream">
+          Dashboard
+        </Link>
+        <button onClick={() => logout()} className="rounded-md border border-ink-cream/20 px-4 py-2 text-xs font-semibold tracking-wide text-ink-cream transition-colors hover:bg-ink-cream hover:text-ink-black">
+          Logout
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="hidden items-center gap-4 md:flex">
+      <Link href="/favorites" aria-label="View favorites" className="text-ink-muted transition-colors hover:text-ink-cream">
+        <HeartIcon />
+      </Link>
+      <Link href="/login" className="rounded-md border border-ink-cream/20 px-4 py-2 text-xs font-semibold tracking-wide text-ink-cream transition-colors hover:bg-ink-cream hover:text-ink-black">
+        BOOK / SIGN IN
+      </Link>
+    </div>
   );
 }
 
@@ -155,6 +172,44 @@ function HeartIcon() {
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
     </svg>
+  );
+}
+
+function AuthMobileLinks({ onClose }: { onClose: () => void }) {
+  const { user, logout } = useAuth();
+
+  if (user) {
+    return (
+      <div className="flex flex-col gap-3">
+        <Link
+          href="/dashboard"
+          onClick={onClose}
+          className="block rounded-md border border-ink-cream/20 px-4 py-2 text-center text-sm font-semibold text-ink-cream transition-colors hover:bg-ink-cream hover:text-ink-black"
+        >
+          Dashboard
+        </Link>
+        <button
+          type="button"
+          onClick={() => {
+            logout();
+            onClose();
+          }}
+          className="block rounded-md border border-ink-cream/20 px-4 py-2 text-center text-sm font-semibold text-ink-cream transition-colors hover:bg-ink-cream hover:text-ink-black"
+        >
+          Logout
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      href="/login"
+      onClick={onClose}
+      className="mt-2 block rounded-md border border-ink-cream/20 px-4 py-2 text-center text-xs font-semibold tracking-wide text-ink-cream transition-colors hover:bg-ink-cream hover:text-ink-black"
+    >
+      BOOK / SIGN IN
+    </Link>
   );
 }
 

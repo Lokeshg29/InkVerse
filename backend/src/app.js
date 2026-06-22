@@ -74,6 +74,9 @@ app.use('/api/tattoos', require('./routes/tattooRoutes'));
 app.use('/api/artists', require('./routes/artistRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 
+// AI Match route
+app.use('/api/ai', require('./routes/aiRoutes'));
+
 // Phase 4 - Authentication and Favorites
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/favorites', require('./routes/favoriteRoutes'));

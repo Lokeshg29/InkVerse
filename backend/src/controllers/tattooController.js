@@ -54,7 +54,7 @@ exports.getAllTattoos = catchAsync(async (req, res, next) => {
   // 2. Count the TOTAL number of matching tattoos (for pagination UI)
   const [tattoos, total] = await Promise.all([
     Tattoo.find(filter)
-      .populate('artist', 'name location rating') // fetch only these artist fields
+      .populate('artist', '_id name location rating') // fetch required artist fields including _id
       .skip(skip)
       .limit(Number(limit))
       .sort({ createdAt: -1 }), // newest first
@@ -79,7 +79,7 @@ exports.getAllTattoos = catchAsync(async (req, res, next) => {
 exports.getTattooById = catchAsync(async (req, res, next) => {
   const tattoo = await Tattoo.findById(req.params.id).populate(
     'artist',
-    'name location rating photoUrl specialties'
+    '_id name location rating photoUrl specialties'
   );
 
   // If no tattoo was found with that ID, Mongoose returns `null`,

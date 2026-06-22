@@ -14,17 +14,46 @@
  */
 
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 import { Tattoo } from "@/lib/types";
 
 export default function TattooCard({ tattoo }: { tattoo: Tattoo }) {
-  // Local-only favorite state for now (Phase 5 = no backend yet).
-  // In Phase 6, this will be replaced by a real API call that
-  // saves the favorite to the logged-in user's account.
-  const [isFavorited, setIsFavorited] = useState(false);
+  const router = useRouter();
+  const { token, favoriteIds, addFavorite, removeFavorite } = useAuth();
+  const [isUpdating, setIsUpdating] = useState(false);
+  const isFavorited = favoriteIds.includes(tattoo.id);
+
+  async function handleFavoriteClick(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    setIsUpdating(true);
+    try {
+      if (isFavorited) {
+        await removeFavorite(tattoo.id);
+      } else {
+        await addFavorite(tattoo);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsUpdating(false);
+    }
+  }
 
   return (
-    <div className="group overflow-hidden rounded-lg border border-ink-border bg-ink-surface transition-colors hover:border-ink-cream/30">
+    <Link
+      href={`/tattoos/${tattoo.id}`}
+      className="group block overflow-hidden rounded-3xl border border-red-900/30 bg-ink-surface transition-all duration-300 hover:-translate-y-1 hover:border-red-700/70 hover:shadow-[0_0_30px_rgba(180,40,40,0.25)]"
+    >
       <div className="relative aspect-[4/5] overflow-hidden">
         <Image
           src={tattoo.imageUrl}
@@ -41,16 +70,14 @@ export default function TattooCard({ tattoo }: { tattoo: Tattoo }) {
 
         {/* Favorite heart button - top right */}
         <button
-          onClick={(e) => {
-            // Stop the click from also triggering a parent link
-            // navigation, in case this card is ever wrapped in a Link.
-            e.preventDefault();
-            setIsFavorited(!isFavorited);
-          }}
+          onClick={handleFavoriteClick}
           aria-label={
             isFavorited ? "Remove from favorites" : "Add to favorites"
           }
-          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-ink-black/80 text-ink-cream transition-colors hover:bg-ink-black"
+          className={`absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-ink-black/80 text-ink-cream transition-colors hover:bg-ink-black ${
+            isFavorited ? "text-ink-crimson-bright" : ""
+          }`}
+          disabled={isUpdating}
         >
           <HeartIcon filled={isFavorited} />
         </button>
@@ -62,7 +89,7 @@ export default function TattooCard({ tattoo }: { tattoo: Tattoo }) {
           by {tattoo.artist.name} · {tattoo.style}
         </p>
       </div>
-    </div>
+    </Link>
   );
 }
 

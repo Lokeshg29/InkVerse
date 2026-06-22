@@ -98,6 +98,23 @@ exports.createBooking = catchAsync(async (req, res, next) => {
 });
 
 /**
+ * GET /api/bookings/my
+ *
+ * Returns bookings belonging to the authenticated user.
+ */
+exports.getMyBookings = catchAsync(async (req, res, next) => {
+  const bookings = await Booking.find({ user: req.user._id })
+    .populate('tattoo', 'title imageUrl')
+    .populate('artist', 'name')
+    .sort({ createdAt: -1 });
+
+  res.status(200).json({
+    success: true,
+    data: bookings,
+  });
+});
+
+/**
  * GET /api/bookings/:id
  *
  * Returns one booking with full user/tattoo/artist details populated.
