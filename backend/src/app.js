@@ -60,6 +60,11 @@ app.use(morgan('dev'));
 //    then req.body would be `undefined`. WITH this line,
 //    req.body becomes the actual JavaScript object { tattooId: "123" }.
 app.use(express.json());
+app.get('/render-test', (req, res) => {
+  res.json({
+    message: 'RENDER_DEPLOYMENT_WORKING_123'
+  });
+});
 
 // ──────────────────────────────────────────────────────────────
 // ROUTES
