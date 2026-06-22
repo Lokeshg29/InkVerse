@@ -12,28 +12,29 @@ export default function ArtistsPage() {
 
   useEffect(() => {
     async function loadArtists() {
-      setIsLoading(true);
-      setError(null);
+  setIsLoading(true);
+  setError(null);
 
-      try {
-        const response = await getArtists();
-        const normalizedArtists: Artist[] = response.data.map((artist) => ({
-          ...artist,
-          id: artist._id ?? artist.id,
-        }));
+  try {
+    const response = await getArtists();
 
-        setArtists(normalizedArtists);
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : "Unable to load artists. Please try again."
-        );
-        setArtists([]);
-      } finally {
-        setIsLoading(false);
-      }
-    }
+    const normalizedArtists: Artist[] = response.data.map((artist) => ({
+      ...artist,
+      id: artist._id || artist.id || "",
+    }));
+
+    setArtists(normalizedArtists);
+  } catch (err) {
+    setError(
+      err instanceof Error
+        ? err.message
+        : "Unable to load artists. Please try again."
+    );
+    setArtists([]);
+  } finally {
+    setIsLoading(false);
+  }
+}
 
     loadArtists();
   }, []);

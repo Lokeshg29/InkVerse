@@ -9,7 +9,14 @@ import { Artist } from "@/lib/types";
 
 export default function ArtistDetailPage() {
   const params = useParams();
-  const artistId = params?.id;
+
+  const artistId =
+    typeof params?.id === "string"
+      ? params.id
+      : Array.isArray(params?.id)
+      ? params.id[0]
+      : undefined;
+
   const [artist, setArtist] = useState<Artist | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,10 +33,11 @@ export default function ArtistDetailPage() {
       setError(null);
 
       try {
-        const response = await getArtistById(artistId);
+        const response = await getArtistById(artistId!);
+
         const normalizedArtist: Artist = {
-          ...response.data,
-          id: response.data._id ?? response.data.id,
+        ...response.data,
+         id: response.data._id || response.data.id || "",
         };
 
         setArtist(normalizedArtist);

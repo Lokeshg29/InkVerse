@@ -66,7 +66,7 @@ export default function DashboardPage() {
       setBookingsError(null);
 
       try {
-        const response = await getMyBookings(token);
+        const response = await getMyBookings(token!);
         if (!active) return;
         setBookings(response.data);
       } catch (err) {

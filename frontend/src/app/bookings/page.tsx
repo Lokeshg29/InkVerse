@@ -36,7 +36,7 @@ export default function MyBookingsPage() {
       setError(null);
 
       try {
-        const response = await getMyBookings(token);
+        const response = await getMyBookings(token!);
         if (!active) return;
         setBookings(response.data);
       } catch (err) {
