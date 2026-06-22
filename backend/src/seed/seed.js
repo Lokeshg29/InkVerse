@@ -35,7 +35,7 @@ const artistsData = [
   {
     name: 'Nova Sinclair',
     bio: 'Specializes in bold Japanese-inspired blackwork with clean linework.',
-    photoUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400',
+    photoUrl: '/artists/nova-sinclair.jpg',
     location: 'Lisbon, PT',
     rating: 4.7,
     specialties: ['Japanese', 'Blackwork'],
@@ -44,7 +44,7 @@ const artistsData = [
   {
     name: 'Dax Holloway',
     bio: 'Tribal and geometric specialist with a decade of studio experience.',
-    photoUrl: 'https://images.unsplash.com/photo-1500648767791-00d5a4ee9a3b?w=400',
+    photoUrl: '/artists/dax-holloway.jpg',
     location: 'London, UK',
     rating: 4.6,
     specialties: ['Tribal', 'Geometric'],
@@ -53,7 +53,7 @@ const artistsData = [
   {
     name: 'Kira Voss',
     bio: 'Known for bold linework and nature-inspired pieces.',
-    photoUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400',
+    photoUrl: '/artists/kira-voss.jpg',
     location: 'Berlin, DE',
     rating: 4.8,
     specialties: ['Blackwork', 'Minimalist'],
@@ -62,7 +62,7 @@ const artistsData = [
   {
     name: 'Mateo Cruz',
     bio: 'Soft shading and watercolor techniques, classically trained.',
-    photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',
+    photoUrl: '/artists/mateo-cruz.jpg',
     location: 'Barcelona, ES',
     rating: 4.5,
     specialties: ['Watercolor', 'Realism'],
@@ -71,7 +71,7 @@ const artistsData = [
   {
     name: 'Yuki Tanaka',
     bio: 'High-contrast traditional Japanese tattooing, third-generation artist.',
-    photoUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400',
+    photoUrl: '/artists/yuki-tanaka.jpg',
     location: 'Tokyo, JP',
     rating: 4.9,
     specialties: ['Japanese', 'Traditional'],
@@ -80,7 +80,7 @@ const artistsData = [
   {
     name: 'Selene Marsh',
     bio: 'Fine line and minimalist designs for first-time clients.',
-    photoUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400',
+    photoUrl: '/artists/selene-marsh.jpg',
     location: 'New York, US',
     rating: 4.6,
     specialties: ['Minimalist', 'Traditional'],

@@ -7,6 +7,30 @@ export type TattooQueryParams = {
   limit?: number;
 };
 
+export type ArtistApiItem = {
+  _id?: string;
+} & {
+  id?: string;
+  name: string;
+  bio: string;
+  photoUrl: string;
+  location: string;
+  rating: number;
+  specialties: string[];
+  experienceYears: number;
+};
+
+export type ArtistsResponse = {
+  success: boolean;
+  count: number;
+  data: ArtistApiItem[];
+};
+
+export type ArtistResponse = {
+  success: boolean;
+  data: ArtistApiItem;
+};
+
 export type TattooApiItem = Tattoo & {
   _id?: string;
   artist: {
@@ -24,6 +48,36 @@ export type TattoosResponse = {
   currentPage: number;
   data: TattooApiItem[];
 };
+
+export async function getArtists() {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+  const response = await fetch(`${API_BASE_URL}/api/artists`);
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(
+      `Failed to load artists: ${response.status} ${response.statusText} ${errorBody}`
+    );
+  }
+
+  const data = (await response.json()) as ArtistsResponse;
+  return data;
+}
+
+export async function getArtistById(id: string) {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+  const response = await fetch(`${API_BASE_URL}/api/artists/${id}`);
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(
+      `Failed to load artist: ${response.status} ${response.statusText} ${errorBody}`
+    );
+  }
+
+  const data = (await response.json()) as ArtistResponse;
+  return data;
+}
 
 export async function getTattoos(query: TattooQueryParams) {
   const params = new URLSearchParams();
