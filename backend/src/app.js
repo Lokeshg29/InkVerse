@@ -1,4 +1,4 @@
-console.log('APP_JS_VERSION_JUNE22_001');
+
 /**
  * ============================================================
  * src/app.js
@@ -26,6 +26,14 @@ require('dotenv').config();
 // Create the Express application object.
 // Everything (routes, middleware) attaches to this single object.
 const app = express();
+app.get('/render-test', (req, res) => {
+  res.json({
+    success: true,
+    message: 'RENDER_TEST_WORKING'
+  });
+});
+
+console.log('APP_JS_LOADED_SUCCESSFULLY');
 
 // ──────────────────────────────────────────────────────────────
 // MIDDLEWARE PIPELINE
