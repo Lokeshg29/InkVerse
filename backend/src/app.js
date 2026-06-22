@@ -116,4 +116,7 @@ app.use((req, res) => {
 // ──────────────────────────────────────────────────────────────
 app.use(require('./middleware/errorHandler'));
 
+console.log('HEALTH ROUTE REGISTERED');
+console.log('TATTOO ROUTE REGISTERED');
+console.log('APP SETUP COMPLETE');
 module.exports = app;
