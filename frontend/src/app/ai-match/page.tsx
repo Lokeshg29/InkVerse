@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import RequireAuth from "@/components/auth/RequireAuth";
-import { matchAiTattoo, AiMatchResult } from "@/lib/api";
+import { matchAiTattooLocal, AiMatchResult } from "@/lib/api";
 
 export default function AiMatchPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -15,6 +15,20 @@ export default function AiMatchPage() {
     setError(null);
     const selected = event.target.files?.[0] ?? null;
     if (!selected) return;
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(selected.type)) {
+      setError('Please select a JPEG, PNG, or WEBP image');
+      return;
+    }
+
+    // Validate file size (10MB limit)
+    if (selected.size > 10 * 1024 * 1024) {
+      setError('Image must be less than 10MB');
+      return;
+    }
+
     setFile(selected);
     setPreview(URL.createObjectURL(selected));
     setResult(null);
@@ -32,7 +46,7 @@ export default function AiMatchPage() {
     setResult(null);
 
     try {
-      const response = await matchAiTattoo(file);
+      const response = await matchAiTattooLocal(file);
       setResult(response.data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to analyze image.");
@@ -199,19 +213,19 @@ export default function AiMatchPage() {
 
           <aside className="space-y-6">
             <div className="rounded-[2rem] border border-ink-border bg-ink-surface p-8">
-              <p className="text-sm uppercase tracking-[0.3em] text-ink-muted">Premium AI match</p>
+              <p className="text-sm uppercase tracking-[0.3em] text-ink-muted">Local AI match</p>
               <h2 className="mt-3 text-2xl font-semibold text-ink-cream">How it works</h2>
               <p className="mt-4 text-sm leading-7 text-ink-muted">
-                Upload an image of the style you love, and InkVerse will analyze it using advanced vision AI to recommend tattoo designs and artists that fit your aesthetic.
+                Upload an image with a descriptive filename (e.g., "dragon-japanese.jpg"), and InkVerse will analyze it using local keyword matching to recommend tattoo designs and artists that fit your aesthetic. No external APIs required.
               </p>
             </div>
 
             <div className="rounded-[2rem] border border-ink-border bg-ink-surface p-8">
               <p className="text-sm uppercase tracking-[0.3em] text-ink-muted">Tips</p>
               <ul className="mt-5 space-y-3 text-sm text-ink-muted">
-                <li>• Use a clear image with strong lines or colors.</li>
-                <li>• Prefer full tattoo references or mood boards.</li>
-                <li>• The AI looks for style, color type, and elements.</li>
+                <li>• Use descriptive filenames with style keywords (e.g., "dragon", "geometric", "floral").</li>
+                <li>• Keywords like "koi", "lion", "mandala" help detect the style.</li>
+                <li>• The system analyzes your filename to find matching tattoos.</li>
               </ul>
             </div>
           </aside>

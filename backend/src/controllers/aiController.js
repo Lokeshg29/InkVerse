@@ -2,6 +2,8 @@ const Tattoo = require('../models/Tattoo');
 const Artist = require('../models/Artist');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
+const { detectStyle } = require('../utils/styleDetector');
+const { getRecommendations } = require('../utils/recommendationEngine');
 
 function extractJsonFromResponseContent(content) {
   if (!Array.isArray(content)) return null;
@@ -43,6 +45,7 @@ function normalizeStyle(style) {
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
+
 
 exports.matchTattoo = catchAsync(async (req, res, next) => {
   if (!req.file) {
@@ -141,6 +144,72 @@ exports.matchTattoo = catchAsync(async (req, res, next) => {
       elements: analysis.elements,
       recommendedTattoos,
       recommendedArtists,
+    },
+  });
+});
+
+/**
+ * Local AI Match - No external APIs
+ * Analyzes filename and uses keyword matching to detect style
+ */
+exports.matchTattooLocal = catchAsync(async (req, res, next) => {
+  if (!req.file) {
+    return next(new AppError('Image file is required', 400));
+  }
+
+  // Extract filename from uploaded file
+  const filename = req.file.originalname;
+
+  // Detect style using local keyword matching
+  const { style: detectedStyle, confidence, matchedKeywords, elements } = detectStyle(filename);
+
+  // Get recommendations from MongoDB
+  const { tattoos, artists } = await getRecommendations(detectedStyle, matchedKeywords);
+
+  // Determine complexity and color type based on keywords (simple heuristics)
+  let complexity = 'medium';
+  let colorType = 'unknown';
+
+  if (matchedKeywords.some(k => ['minimal', 'simple', 'small', 'tiny'].includes(k.toLowerCase()))) {
+    complexity = 'low';
+  } else if (matchedKeywords.some(k => ['detailed', 'realistic', 'complex'].includes(k.toLowerCase()))) {
+    complexity = 'high';
+  }
+
+  if (matchedKeywords.some(k => ['black', 'blackwork', 'dark'].includes(k.toLowerCase()))) {
+    colorType = 'monochrome';
+  } else if (matchedKeywords.some(k => ['watercolor', 'color', 'vibrant'].includes(k.toLowerCase()))) {
+    colorType = 'vibrant';
+  } else if (detectedStyle === 'Blackwork' || detectedStyle === 'Minimalist') {
+    colorType = 'monochrome';
+  } else {
+    colorType = 'muted';
+  }
+
+  res.status(200).json({
+    success: true,
+    data: {
+      detectedStyle,
+      confidence,
+      style: detectedStyle,
+      complexity,
+      colorType,
+      elements: elements.length > 0 ? elements : matchedKeywords, // Use extracted elements, fallback to keywords
+      recommendedTattoos: tattoos.map(t => ({
+        _id: t._id || t.id,
+        title: t.title,
+        imageUrl: t.imageUrl,
+        style: t.style,
+        price: t.price,
+      })),
+      recommendedArtists: artists.map(a => ({
+        _id: a._id || a.id,
+        name: a.name,
+        photoUrl: a.photoUrl,
+        location: a.location,
+        rating: a.rating,
+        specialties: a.specialties,
+      })),
     },
   });
 });

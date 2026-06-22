@@ -164,8 +164,8 @@ export default function DashboardPage() {
                 </div>
               ) : nextBooking ? (
                 <BookingCard
-                  tattoo={nextBooking.tattoo.title}
-                  artist={nextBooking.artist.name}
+                  tattoo={nextBooking.tattoo?.title || "Tattoo Removed"}
+                  artist={nextBooking.artist?.name || "Unknown Artist"}
                   date={new Date(nextBooking.date).toLocaleDateString()}
                   status={nextBooking.status}
                 />

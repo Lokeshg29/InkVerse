@@ -351,6 +351,27 @@ export async function matchAiTattoo(imageFile: File) {
   return data;
 }
 
+export async function matchAiTattooLocal(imageFile: File) {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+  const formData = new FormData();
+  formData.append('image', imageFile);
+
+  const response = await fetch(`${API_BASE_URL}/api/ai/match-local`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(
+      `Failed to analyze image: ${response.status} ${response.statusText} ${errorBody}`
+    );
+  }
+
+  const data = (await response.json()) as AiMatchResponse;
+  return data;
+}
+
 export async function getTattoos(query: TattooQueryParams) {
   const params = new URLSearchParams();
 

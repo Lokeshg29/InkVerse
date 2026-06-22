@@ -50,6 +50,7 @@ const artistsData = [
     specialties: ['Tribal', 'Geometric'],
     experienceYears: 7,
   },
+ 
   {
     name: 'Kira Voss',
     bio: 'Known for bold linework and nature-inspired pieces.',
@@ -120,6 +121,7 @@ const tattoosData = [
     artistIndex: 0,
     tags: ['flower', 'high-contrast', 'blackwork'],
   },
+
   {
     title: 'Wandering Wolf',
     description: 'A lone wolf rendered in delicate fine-line style.',
@@ -128,6 +130,15 @@ const tattoosData = [
     price: 140,
     artistIndex: 5,
     tags: ['wolf', 'fine-line', 'animal'],
+  },
+  {
+  title: "Skybound Eagle",
+  description: "A minimalist eagle compass tattoo symbolizing freedom, direction, and adventure.",
+  imageUrl: "/tattoos/eagle.jpg",
+  style: "Minimalist",
+  price: 180,
+  artistIndex: 5,
+  tags: ["eagle", "bird", "compass", "freedom", "minimalist"]
   },
   {
     title: 'Voidwalker',
